@@ -8,6 +8,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 //@MapperScan("com.rabbit.macro.mall.tiny.mbg.mapper")
+//@MapperScan("com.rabbit.macro.mall.tiny.dao")
 public class RabbitMallTiny04Application {
 
 	public static void main(String[] args) {
