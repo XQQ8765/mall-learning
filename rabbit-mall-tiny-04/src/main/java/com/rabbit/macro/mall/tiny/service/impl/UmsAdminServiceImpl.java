@@ -70,7 +70,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             return null;
         }
         //将密码进行加密操作
-        String encodePassword = passwordEncoder.encode(umsAdmin.getPassword());
+        String clearPwd = umsAdmin.getPassword();
+        String encodePassword = passwordEncoder.encode(clearPwd);
+        LOGGER.info("register(): clearPwd:" + clearPwd + ", encodePassword:"+ encodePassword + ", umsAdmin:" + umsAdmin);
         umsAdmin.setPassword(encodePassword);
         umsAdminMapper.insert(umsAdmin);
         return umsAdmin;

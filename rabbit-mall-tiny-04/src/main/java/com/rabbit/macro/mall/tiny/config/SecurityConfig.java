@@ -3,6 +3,9 @@ package com.rabbit.macro.mall.tiny.config;
 import com.rabbit.macro.mall.tiny.component.JwtAuthenticationTokenFilter;
 import com.rabbit.macro.mall.tiny.component.RestAuthenticationEntryPoint;
 import com.rabbit.macro.mall.tiny.component.RestfulAccessDeniedHandler;
+import com.rabbit.macro.mall.tiny.dto.AdminUserDetails;
+import com.rabbit.macro.mall.tiny.mbg.model.UmsAdmin;
+import com.rabbit.macro.mall.tiny.mbg.model.UmsPermission;
 import com.rabbit.macro.mall.tiny.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +16,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.List;
 
 /**
  * SpringSecurity的配置
@@ -68,6 +75,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.exceptionHandling()
                 .accessDeniedHandler(restfulAccessDeniedHandler)
                 .authenticationEntryPoint(restAuthenticationEntryPoint);
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        //获取登录用户信息
+        return username -> {
+            UmsAdmin admin = adminService.getAdminByUsername(username);
+            if (admin != null) {
+                List<UmsPermission> permissionList = adminService.getPermissionList(admin.getId());
+                return new AdminUserDetails(admin,permissionList);
+            }
+            throw new UsernameNotFoundException("用户名或密码错误");
+        };
     }
 
     @Bean
