@@ -11,6 +11,7 @@
 
     <modules>
         <module>mall-tiny</module>
+        <module>rabbit-springsecurity-demo</module>
     </modules>
 
 </project>
