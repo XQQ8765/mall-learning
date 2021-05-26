@@ -7,7 +7,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
-@MapperScan("com.rabbit.security.demo.mbg.mapper")
+@MapperScan({"com.rabbit.security.demo.mbg.mapper", "com.rabbit.security.demo.dao"})
 public class MySpringSecurityDemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(MySpringSecurityDemoApplication.class, args);
