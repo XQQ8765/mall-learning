@@ -1,3 +1,7 @@
 https://macrozheng.github.io/mall-learning/#/architect/mall_arch_04
+https://github.com/macrozheng/mall-learning/tree/master/mall-tiny-05
+
+Springboot + Spring Security 实现前后端分离登录认证及权限控制 https://blog.csdn.net/I_am_Hutengfei/article/details/100561564
+springboot+security实现权限管理 https://blog.csdn.net/zhaoxichen_10/article/details/88713799
 ----------------------------------------------------------------------------
 http://localhost:8080/swagger-ui.html#/UmsAdminController
