@@ -9,3 +9,4 @@ https://github.com/18061495586/Spring-Security-Demo
 -------------------------------------------------------------------
 http://localhost:8080/swagger-ui.html
 http://localhost:8080/login
+http://localhost:8080/logout

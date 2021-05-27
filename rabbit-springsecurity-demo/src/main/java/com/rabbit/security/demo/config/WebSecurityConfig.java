@@ -39,20 +39,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     CustomizeAuthenticationFailureHandler authenticationFailureHandler;
 
+    //登出成功处理逻辑
+    @Autowired
+    CustomizeLogoutSuccessHandler logoutSuccessHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
         http.authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
+                ////设置不拦截页面，可直接通过，路径访问 "/", "/index" 则不拦截
+                .antMatchers("/", "/index").permitAll()
                 .antMatchers("/r/getUser").hasAuthority("query_user")
+                .anyRequest().authenticated()
+                //.antMatchers("/**/*").denyAll()
+        //登出
+        .and().logout()
+                .permitAll()//允许所有用户
+                .logoutSuccessHandler(logoutSuccessHandler)//登出成功处理逻辑
+                .deleteCookies("JSESSIONID")//登出之后删除cookie
         //登入, enable form login. Will provide spring security default login page. visit via: /login
-        .and().formLogin().permitAll()
-            .successHandler(authenticationSuccessHandler)//登录成功处理逻辑
-            .failureHandler(authenticationFailureHandler);//登录失败处理逻辑
+        .and().formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/home")   // 访问指定页面，用户未登入，跳转至登入页面，如果登入成功，跳转至用户访问指定页面，用户访问登入页面，默认的跳转页面
+                .failureUrl("/login").permitAll()
+            //.successHandler(authenticationSuccessHandler)//登录成功处理逻辑
+            //.failureHandler(authenticationFailureHandler)//登录失败处理逻辑
         //异常处理(权限拒绝、登录失效等)
-        //.and().exceptionHandling()
-        //    .authenticationEntryPoint(authenticationEntryPoint);//匿名用户访问无权限资源时的异常处理
-        //.antMatchers("/**/*").denyAll();
+        .and().exceptionHandling()
+            .authenticationEntryPoint(authenticationEntryPoint);//匿名用户访问无权限资源时的异常处理  ???Will cause /login 404
     }
 
     @Override

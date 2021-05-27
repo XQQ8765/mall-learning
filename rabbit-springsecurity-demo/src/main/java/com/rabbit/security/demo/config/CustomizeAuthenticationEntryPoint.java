@@ -1,5 +1,6 @@
 package com.rabbit.security.demo.config;
 
+import com.alibaba.fastjson.JSON;
 import com.rabbit.security.demo.JsonResult;
 import com.rabbit.security.demo.ResultCode;
 import com.rabbit.security.demo.ResultTool;
@@ -38,7 +39,6 @@ public class CustomizeAuthenticationEntryPoint implements AuthenticationEntryPoi
         LOGGER.warn("User:" + username + ", Authentication failed, e:" + e);
         JsonResult result = ResultTool.fail(ResultCode.USER_NOT_LOGIN);
         httpServletResponse.setContentType("text/json;charset=utf-8");
-       // httpServletResponse.getWriter().write(JSON.toJSONString(result));
-        httpServletResponse.getWriter().write(""+result);
+        httpServletResponse.getWriter().write(JSON.toJSONString(result));
     }
 }

@@ -8,6 +8,9 @@ spring:
     url: jdbc:mysql://localhost:3306/rabbit_springsecurity_demo?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=CTT
     username: root
     password: 123456
+  ##设置html文件位置
+  thymeleaf:
+    prefix: classpath:/templates/
 
 mybatis:
   mapper-locations:
@@ -20,7 +23,6 @@ jwt:
   secret: mySecret #JWT加解密使用的密钥
   expiration: 604800 #JWT的超期限时间(60*60*24)
   tokenHead: Bearer  #JWT负载中拿到开头
-
 
 logging:
   level:
