@@ -7,6 +7,7 @@ https://www.cnblogs.com/datamining-bio/p/13831000.html Optional类与使用==判
 
 https://github.com/18061495586/Spring-Security-Demo
 -------------------------------------------------------------------
+http://localhost:8080/
 http://localhost:8080/swagger-ui.html
 http://localhost:8080/login
 http://localhost:8080/logout

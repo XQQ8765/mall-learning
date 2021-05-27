@@ -29,19 +29,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     //匿名用户访问无权限资源时的异常
     @Autowired
-    CustomizeAuthenticationEntryPoint authenticationEntryPoint;
+    private CustomizeAuthenticationEntryPoint authenticationEntryPoint;
 
     //登录成功处理逻辑
     @Autowired
-    CustomizeAuthenticationSuccessHandler authenticationSuccessHandler;
+    private CustomizeAuthenticationSuccessHandler authenticationSuccessHandler;
 
     //登录失败处理逻辑
     @Autowired
-    CustomizeAuthenticationFailureHandler authenticationFailureHandler;
+    private CustomizeAuthenticationFailureHandler authenticationFailureHandler;
 
     //登出成功处理逻辑
     @Autowired
-    CustomizeLogoutSuccessHandler logoutSuccessHandler;
+    private CustomizeLogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    private CustomizeSessionInformationExpiredStrategy sessionInformationExpiredStrategy;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -53,11 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/r/getUser").hasAuthority("query_user")
                 .anyRequest().authenticated()
                 //.antMatchers("/**/*").denyAll()
-        //登出
-        .and().logout()
-                .permitAll()//允许所有用户
-                .logoutSuccessHandler(logoutSuccessHandler)//登出成功处理逻辑
-                .deleteCookies("JSESSIONID")//登出之后删除cookie
+
         //登入, enable form login. Will provide spring security default login page. visit via: /login
         .and().formLogin()
                 .loginPage("/login")
@@ -65,9 +64,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login").permitAll()
             //.successHandler(authenticationSuccessHandler)//登录成功处理逻辑
             //.failureHandler(authenticationFailureHandler)//登录失败处理逻辑
+
+        //登出
+         .and().logout()
+                .permitAll()//允许所有用户
+                .logoutSuccessHandler(logoutSuccessHandler)//登出成功处理逻辑
+                .deleteCookies("JSESSIONID")//登出之后删除cookie
+
         //异常处理(权限拒绝、登录失效等)
         .and().exceptionHandling()
-            .authenticationEntryPoint(authenticationEntryPoint);//匿名用户访问无权限资源时的异常处理  ???Will cause /login 404
+            .authenticationEntryPoint(authenticationEntryPoint)//匿名用户访问无权限资源时的异常处理  ???Will cause /login 404
+
+        //会话管理
+        .and().sessionManagement().
+                maximumSessions(1).//同一账号同时登录最大用户数
+                expiredSessionStrategy(sessionInformationExpiredStrategy);//会话信息过期策略会话信息过期策略(账号被挤下线)
     }
 
     @Override
