@@ -6,3 +6,5 @@ SpringBoot整合Mybatis完整详细版 https://blog.csdn.net/iku5200/article/det
 
 https://github.com/18061495586/Spring-Security-Demo
 -------------------------------------------------------------------
+http://localhost:8080/swagger-ui.html
+http://localhost:8080/login
