@@ -48,11 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //登入, enable form login. Will provide spring security default login page. visit via: /login
         .and().formLogin().permitAll()
             .successHandler(authenticationSuccessHandler)//登录成功处理逻辑
-            .failureHandler(authenticationFailureHandler)//登录失败处理逻辑
+            .failureHandler(authenticationFailureHandler);//登录失败处理逻辑
         //异常处理(权限拒绝、登录失效等)
-        .and().exceptionHandling()
-            .authenticationEntryPoint(authenticationEntryPoint);//匿名用户访问无权限资源时的异常处理
-      //  .antMatchers("/**/*").denyAll();
+        //.and().exceptionHandling()
+        //    .authenticationEntryPoint(authenticationEntryPoint);//匿名用户访问无权限资源时的异常处理
+        //.antMatchers("/**/*").denyAll();
     }
 
     @Override

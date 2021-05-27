@@ -7,6 +7,7 @@ import com.rabbit.security.demo.ResultTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -16,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * 登录失败处理逻辑
@@ -27,8 +29,13 @@ public class CustomizeAuthenticationFailureHandler implements AuthenticationFail
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException e) throws IOException, ServletException {
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LOGGER.warn("User:" + userDetails.getUsername() + " login failed, e:" + e);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //See https://www.cnblogs.com/datamining-bio/p/13831000.html Optional类与使用==判断null有什么区别？使用Optional类有什么优势？
+        String username = Optional.ofNullable(authentication)
+                .map(auth -> (User) auth.getPrincipal())
+                .map(user -> user.getUsername())
+                .orElse(null);
+        LOGGER.warn("User:" + username + " login failed, e:" + e);
         //返回json数据
         JsonResult result = null;
         if (e instanceof AccountExpiredException) {
