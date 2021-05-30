@@ -12,4 +12,7 @@ public interface SysPermissionService {
      * @return
      */
     List<SysPermission> selectListByUser(Integer userId);
+
+
+    List<SysPermission> selectListByPath(String requestUrl);
 }

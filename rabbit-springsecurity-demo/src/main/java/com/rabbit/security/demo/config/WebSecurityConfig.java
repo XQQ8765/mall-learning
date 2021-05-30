@@ -4,6 +4,7 @@ import com.rabbit.security.demo.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 /**
  * 创建WebSecurityConfig继承WebSecurityConfigurerAdapter类，并实现configure(AuthenticationManagerBuilder auth)和 configure(HttpSecurity http)方法。后续我们会在里面加入一系列配置，包括配置认证方式、登入登出、异常处理、会话管理等。
@@ -46,6 +48,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomizeSessionInformationExpiredStrategy sessionInformationExpiredStrategy;
 
+    //访问决策管理器
+    @Autowired
+    private CustomizeAccessDecisionManager  accessDecisionManager;
+
+    //实现权限拦截
+    @Autowired
+    CustomizeFilterInvocationSecurityMetadataSource securityMetadataSource;
+
+    @Autowired
+    private CustomizeAbstractSecurityInterceptor securityInterceptor;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
@@ -56,6 +69,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/r/getUser").hasAuthority("query_user")
                 .anyRequest().authenticated()
                 //.antMatchers("/**/*").denyAll()
+
+        // 九、实现基于JDBC的动态权限控制
+        .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setAccessDecisionManager(accessDecisionManager);//访问决策管理器
+                        o.setSecurityMetadataSource(securityMetadataSource);//安全元数据源
+                        return o;
+                    }
+                })
 
         //登入, enable form login. Will provide spring security default login page. visit via: /login
         .and().formLogin()
@@ -79,6 +102,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and().sessionManagement().
                 maximumSessions(1).//同一账号同时登录最大用户数
                 expiredSessionStrategy(sessionInformationExpiredStrategy);//会话信息过期策略会话信息过期策略(账号被挤下线)
+
+        http.addFilterBefore(securityInterceptor, FilterSecurityInterceptor.class);//增加到默认拦截链中
     }
 
     @Override

@@ -11,6 +11,8 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
+ * 九、实现基于JDBC的动态权限控制
+ *
  * 我们需要实现一个AccessDecisionManager（访问决策管理器），在里面我们对当前请求的资源进行权限判断，判断当前登录用户是否拥有该权限，如果有就放行，
  * 如果没有就抛出一个"权限不足"的异常。不过在实现AccessDecisionManager之前我们还需要做一件事，那就是拦截到当前的请求，
  * 并根据请求路径从数据库中查出当前资源路径需要哪些权限才能访问，然后将查出的需要的权限列表交给AccessDecisionManager去处理后续逻辑。
@@ -56,5 +58,13 @@ public class CustomizeAbstractSecurityInterceptor extends AbstractSecurityInterc
         } finally {
             super.afterInvocation(token, null);
         }
+    }
+
+    @Override
+    public void destroy() {
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
     }
 }
