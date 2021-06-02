@@ -11,7 +11,8 @@ INSERT INTO sys_permission (id, permission_code, permission_name) VALUES (2, 'qu
 INSERT INTO sys_permission (id, permission_code, permission_name) VALUES (3, 'delete_user', '删除用户');
 INSERT INTO sys_permission (id, permission_code, permission_name) VALUES (4, 'modify_user', '修改用户');
 -- 请求路径
-INSERT INTO sys_request_path (id, url, description) VALUES (1, '/getUser', '查询用户');
+INSERT INTO sys_request_path (id, url, description) VALUES (1, '/r/getUser', '查询用户');
+INSERT INTO sys_request_path (id, url, description) VALUES (2, '/r/deleteUser', '删除用户');
 -- 用户角色关联关系
 INSERT INTO sys_user_role_relation (id, user_id, role_id) VALUES (1, 1, 1);
 INSERT INTO sys_user_role_relation (id, user_id, role_id) VALUES (2, 2, 2);
@@ -24,3 +25,4 @@ INSERT INTO sys_role_permission_relation (id, role_id, permission_id) VALUES (5,
 INSERT INTO sys_role_permission_relation (id, role_id, permission_id) VALUES (6, 2, 2);
 -- 请求路径权限关联关系
 INSERT INTO sys_request_path_permission_relation (id, url_id, permission_id) VALUES (null, 1, 2);
+INSERT INTO sys_request_path_permission_relation (id, url_id, permission_id) VALUES (null, 2, 3);

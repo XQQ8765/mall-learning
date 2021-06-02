@@ -5,7 +5,7 @@ import com.rabbit.security.demo.mbg.model.SysPermission;
 import java.util.List;
 
 public interface SysPermissionDao {
-    List<SysPermission> selectListByUser();
+    List<SysPermission> selectListByUser(Integer userId);
 
     List<SysPermission> selectListByPath(String requestUrl);
 }

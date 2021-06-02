@@ -2,11 +2,13 @@ package com.rabbit.security.demo.config;
 
 import com.rabbit.security.demo.mbg.model.SysPermission;
 import com.rabbit.security.demo.service.SysPermissionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
 import java.util.Collection;
@@ -16,6 +18,7 @@ import java.util.List;
  * 安全元数据源
  * TODO
  */
+@Component
 public class CustomizeFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
     AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -25,7 +28,11 @@ public class CustomizeFilterInvocationSecurityMetadataSource implements FilterIn
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         //获取请求地址
-        String requestUrl = ((FilterInvocation) o).getRequestUrl();
+        String requestUrlWithQueryString = ((FilterInvocation) o).getRequestUrl();
+        String requestUrl = requestUrlWithQueryString;
+        if (requestUrlWithQueryString != null && requestUrlWithQueryString.contains("?")) {
+            requestUrl = StringUtils.substringBefore(requestUrlWithQueryString, "?");
+        }
         //查询具体某个接口的权限
         List<SysPermission> permissionList = sysPermissionService.selectListByPath(requestUrl);
         if(permissionList == null || permissionList.size() == 0){

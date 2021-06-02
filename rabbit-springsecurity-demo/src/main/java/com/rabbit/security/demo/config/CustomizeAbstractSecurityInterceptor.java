@@ -6,6 +6,7 @@ import org.springframework.security.access.intercept.AbstractSecurityInterceptor
 import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.io.IOException;
  * ————————————————
  * 原文链接：https://blog.csdn.net/I_am_Hutengfei/article/details/100561564/
  */
+@Component
 public class CustomizeAbstractSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
     @Autowired
     private FilterInvocationSecurityMetadataSource securityMetadataSource;

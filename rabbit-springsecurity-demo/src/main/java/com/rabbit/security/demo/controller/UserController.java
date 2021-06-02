@@ -28,4 +28,10 @@ public class UserController {
     public JsonResult test() {
         return ResultTool.success("hello world");
     }
+
+    @GetMapping("/r/deleteUser")
+    @ApiOperation("an test for \'delete_user\' permission, only has this permission can access this api.")
+    public JsonResult deleteUser() {
+        return ResultTool.success("/r/deleteUser access successfully.");
+    }
 }
