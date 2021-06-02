@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface SysPermissionDao {
     List<SysPermission> selectListByUser();
+
+    List<SysPermission> selectListByPath(String requestUrl);
 }
