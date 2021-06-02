@@ -26,12 +26,10 @@ public class CustomizeAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
             throws AccessDeniedException, InsufficientAuthenticationException {//See https://www.cnblogs.com/datamining-bio/p/13831000.html Optional类与使用==判断null有什么区别？使用Optional类有什么优势？
-        String username = Optional.ofNullable(authentication)
-                .map(auth -> (User) auth.getPrincipal())
-                .map(user -> user.getUsername())
+        Object principal = Optional.ofNullable(authentication)
+                .map(auth -> auth.getPrincipal())
                 .orElse(null);
-        LOGGER.info("Verify whether User:" + username + " has permission to visit:" + object);
-
+        LOGGER.info("Verify whether Principal:" + principal + " has permission to visit:" + object);
 
         Iterator<ConfigAttribute> iterator = configAttributes.iterator();
         while (iterator.hasNext()) {
